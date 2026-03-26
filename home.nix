@@ -11,6 +11,10 @@ let
 in
 
 { 
+  # imports = [ # didn't work
+  #   ./modules/neovim.nix
+  # ];
+
   home = {
     username = "nixnomo";
     homeDirectory = "/home/nixnomo";
