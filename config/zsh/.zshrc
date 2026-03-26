@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 # The following lines were added by compinstall
 
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _approximate _prefix
@@ -31,5 +24,5 @@ HISTSIZE=91101
 SAVEHIST=17231
 setopt autocd extendedglob notify globdots
 unsetopt beep
-bindkey -v
+bindkey -e
 # End of lines configured by zsh-newuser-install
