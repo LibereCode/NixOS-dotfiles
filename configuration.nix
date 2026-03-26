@@ -64,10 +64,11 @@
     enable = true;
     # Init
     shellInit = ''
-      export ZDOTDIR=~/.config/zsh
+      export ZDOTDIR=$HOME/.config/zsh
+      export ZCACHE=$HOME/.cache/zsh
+      export ZPLUGS=$ZCACHE/plugins   # used in auto-plug.zsh
     '';
     promptInit = ''
-      prompt off
     ''; # TODO p10k
     # builtin
     enableCompletion = true;

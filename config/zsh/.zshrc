@@ -26,3 +26,6 @@ setopt autocd extendedglob notify globdots
 unsetopt beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
+
+$ZDOTDIR/auto-plug.zsh "https://github.com/romkatv/powerlevel10k.git"
+source $ZPLUGS/powerlevel10k/powerlevel10k.zsh-theme
