@@ -2,9 +2,7 @@
   description = "Red-Ice is life";
 
   inputs = {
-    # This is pointing to an unstable release.
-    # If you prefer a stable release instead, you can this to the latest number shown here: https://nixos.org/download
-    # i.e. nixos-24.11
+    # This is pointing to an unstable release. If you prefer a stable release instead, you can this to the latest number shown here: https://nixos.org/download
     # Use `nix flake update` to update the flake to the latest revision of the chosen release channel.
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -13,6 +11,7 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
       };
+
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
@@ -22,11 +21,11 @@
         home-manager.nixosModules.home-manager
         {
           home-manager = {
-	    useGlobalPkgs = true;
-	    useUserPackages = true;
-	    users.nixnomo = import ./home.nix;
-	    backupFileExtension = "backup";
-	  };
+	          useGlobalPkgs = true;
+	          useUserPackages = true;
+	          users.nixnomo = import ./home.nix;
+	          backupFileExtension = "backup";
+	        };
         }
       ];
     };

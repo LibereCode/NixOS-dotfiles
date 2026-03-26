@@ -7,8 +7,9 @@ let
   configs = { # NOTE: Add configs HERE !!
     qtile = "qtile";
     nvim = "nvim";
-  };
-in
+    hypr = "hypr";
+    foot = "foot";
+  }; in
 
 { 
   # imports = [ # didn't work
@@ -25,6 +26,9 @@ in
     packages = with pkgs; [
       neovim
       ripgrep
+      fd
+      bat
+      sd
       nil
       nixpkgs-fmt
       nodejs
@@ -55,6 +59,11 @@ in
       shellAliases = {
         btw = "echo 'Smoke dat red-ice, btw'";
       };
+      profileExtra = ''
+        if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+          exec uwsm start -S hyprland-uwsm.desktop
+        fi
+      '';
     };
   };
 

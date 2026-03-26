@@ -34,21 +34,27 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  services.displayManager.ly.enable = true;
+  services.getty.autologinUser = "nixnomo";
 
   # Enable the X11 windowing system.
-  services.xserver = {
+  # services.xserver = {
+  #   enable = true;
+  #   # Configure keymap in X11
+  #   xkb.layout = "us";
+  #   xkb.variant = "altgr-intl";
+  #   xkb.options = "eurosign:e,caps:escape";
+  #
+  #   autoRepeatDelay = 200;
+  #   autoRepeatInterval = 35;
+  #   windowManager.qtile.enable = true;
+  # };
+
+  # wayland
+  programs.hyprland = {
     enable = true;
-    # Configure keymap in X11
-    xkb.layout = "us";
-    xkb.variant = "altgr-intl";
-    xkb.options = "eurosign:e,caps:escape";
-
-    autoRepeatDelay = 200;
-    autoRepeatInterval = 35;
-    windowManager.qtile.enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
   };
-
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -73,16 +79,22 @@
     ];
   };
 
-  programs.firefox.enable = true;
+  # programs.firefox.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     fish
-    alacritty
+    foot
     git
+    waybar
+    firefox
+    slurp
+    grim
+    wl-clipboard
+    kitty
   ];
 
   fonts.packages = with pkgs; [
@@ -114,6 +126,7 @@
   # system.copySystemConfiguration = true;
 
   # nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [ "nix-command" ];
 
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.11"; # Did you read the comment?
