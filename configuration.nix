@@ -14,70 +14,80 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "red-ice"; # Define your hostname.
+  networking = {
+    hostName = "red-ice"; # Define your hostname.
 
-  # Configure network connections interactively with nmcli or nmtui.
-  networking.networkmanager.enable = true;
-  # TODO iwd-backend
+    # Configure network connections interactively with nmcli or nmtui.
+    networkmanager.enable = true; # TODO iwd-backend
+
+    # Configure network proxy if necessary
+    # proxy.default = "http://user:password@proxy:port/";
+    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+    # Open ports in the firewall.
+    # firewall.allowedTCPPorts = [ ... ];
+    # firewall.allowedUDPPorts = [ ... ];
+    # Or disable the firewall altogether.
+    # firewall.enable = false;
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Stockholm";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_DK.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
+  console = {
+    # font = "Lat2-Terminus16";
+    # keyMap = "us";
+    useXkbConfig = true; # use xkb.options in tty.
+  };
 
   # services.getty.autologinUser = "nixnomo";
-  services.displayManager.ly = {
-    enable = true;
-    # settings = {};
+  services = {
+    displayManager.ly = {
+      enable = true;
+      # settings = {};
+    };
+
+    # Enable CUPS to print documents.
+    # printing.enable = true;
+
+    # Enable sound.
+    # pulseaudio.enable = true;
+    # OR
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+    };
+
+    # Enable touchpad support (enabled default in most desktopManager).
+    libinput.enable = true;
+
+    # List services that you want to enable:
+
+    # Enable the OpenSSH daemon.
+    openssh.enable = true;
   };
 
-  # Enable the X11 windowing system.
-  # services.xserver = {
-  #   enable = true;
-  #   # Configure keymap in X11
-  #   xkb.layout = "us";
-  #   xkb.variant = "altgr-intl";
-  #   xkb.options = "eurosign:e,caps:escape";
-  #
-  #   autoRepeatDelay = 200;
-  #   autoRepeatInterval = 35;
-  #   windowManager.qtile.enable = true;
-  # };
+  programs = {
+    # wayland
+    hyprland = {
+      enable = true;
+      # withUWSM = true;
+      xwayland.enable = true;
+    };
 
-  # wayland
-  programs.hyprland = {
-    enable = true;
-    # withUWSM = true;
-    xwayland.enable = true;
+    zsh.enable = true;
+
+    # Some programs need SUID wrappers, can be configured further or are started in user sessions.
+    mtr.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
   };
 
-  programs.zsh.enable = true;
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # services.pulseaudio.enable = true;
-  # OR
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nixnomo = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
@@ -86,8 +96,6 @@
     ];
     shell = pkgs.zsh;
   };
-
-  # programs.firefox.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -140,35 +148,14 @@
     nerd-fonts.jetbrains-mono
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
   # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
+  # (/run/current-system/configuration.nix). This is useful in case you accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
   # nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.experimental-features = [ "nix-command" ];
 
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "25.11"; # Did you read the comment?
-
+  system.stateVersion = "25.11"; # Did you read the comment? # maybe?
 }
 
