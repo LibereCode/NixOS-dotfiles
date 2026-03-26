@@ -18,6 +18,7 @@
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
+  # TODO iwd-backend
 
   # Set your time zone.
   time.timeZone = "Europe/Stockholm";
@@ -67,6 +68,7 @@
       export ZDOTDIR=$HOME/.config/zsh
       export ZCACHE=$HOME/.cache/zsh
       export ZPLUGS=$ZCACHE/plugins   # used in auto-plug.zsh
+      source $HOME/.config/shells/envvar.sh
     '';
     promptInit = ''
     ''; # TODO p10k
@@ -105,6 +107,7 @@
     packages = with pkgs; [
       tree
     ];
+    shell = pkgs.zsh;
   };
 
   # programs.firefox.enable = true;

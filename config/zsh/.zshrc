@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # The following lines were added by compinstall
 
 # zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _approximate _prefix
@@ -27,5 +34,9 @@ unsetopt beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-$ZDOTDIR/auto-plug.zsh "https://github.com/romkatv/powerlevel10k.git"
-source $ZPLUGS/powerlevel10k/powerlevel10k.zsh-theme
+# shell-shared files.sh
+source ~/.config/shells/envvar.sh
+
+# other sauce
+source $ZDOTDIR/Sauce/plugs.zsh # manage plugins
+

@@ -11,6 +11,7 @@ let
     foot = "foot";
     # bash = "bash";
     zsh = "zsh";
+    shells = "shells";
   }; in
 
 { 
