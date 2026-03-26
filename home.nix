@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 let
+  zsh_plugs = "${config.xdg.dataHome}/zsh/plugins";
   dotfiles = "${config.home.homeDirectory}/NixOS/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   # Standard .config/directory (variables)
@@ -76,6 +77,61 @@ let
       #   fi
       # '';
     };
+
+    fzf = { # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.fzf.enable
+      enable = true;
+      enableZshIntegration = true;
+
+    };
+    zsh = { # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
+    # https://search.nixos.org/options?channel=25.11&query=zsh
+      enable = true;
+      dotDir = "${config.xdg.configHome}/zsh";
+      # .zshenv
+      envExtra = '' # commands added to `.zshenv`
+        source $HOME/.config/shells/envvar.sh
+      ''; # TODO: envvar.sh instead in configuration.nix
+      sessionVariables = {
+        ZCACHE = "$HOME/.cache/zsh";
+        ZPLUGS = "$ZCACHE/plugins";   # used in auto-plug.zsh
+      };
+      # promptInit = ''
+      # ''; # TODO p10k
+
+      # initContent = "";
+
+      enableCompletion = true;
+
+      history = {
+        append = true;
+        expireDuplicatesFirst = true;
+        extended = true;
+        path = "${config.xdg.dataHome}/zsh/zhistory";
+        save = 91101;
+        saveNoDups = true;
+        size = 91101;
+      };
+      historySubstringSearch.enable = true;
+
+      # plugins
+      plugins = [
+        # { # using a local path (manually cloned) makes it 'impure' (bad?)
+        #   name = "zsh-syntax-highlighting";
+        #   # file = "zsh-syntax-highlighting.zsh";
+        #   src = "${zsh_plugs}/zsh-syntax-highlighting"; # can be a git-url
+        # }
+      ];
+
+      autosuggestion = {
+        enable = true;
+      };
+      syntaxHighlighting = {
+        enable = true;
+      };
+
+      # TODO: ? zoxide ? foot ? nix-index ?
+    };
+
   };
 
 }

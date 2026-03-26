@@ -41,19 +41,6 @@
     # settings = {};
   };
 
-  # Enable the X11 windowing system.
-  # services.xserver = {
-  #   enable = true;
-  #   # Configure keymap in X11
-  #   xkb.layout = "us";
-  #   xkb.variant = "altgr-intl";
-  #   xkb.options = "eurosign:e,caps:escape";
-  #
-  #   autoRepeatDelay = 200;
-  #   autoRepeatInterval = 35;
-  #   windowManager.qtile.enable = true;
-  # };
-
   # wayland
   programs.hyprland = {
     enable = true;
@@ -61,30 +48,31 @@
     xwayland.enable = true;
   };
 
-  programs.zsh = {  # https://search.nixos.org/options?channel=25.11&query=zsh
-    enable = true;
-    # Init
-    shellInit = ''
-      export ZDOTDIR=$HOME/.config/zsh
-      export ZCACHE=$HOME/.cache/zsh
-      export ZPLUGS=$ZCACHE/plugins   # used in auto-plug.zsh
-      source $HOME/.config/shells/envvar.sh
-    '';
-    promptInit = ''
-    ''; # TODO p10k
-    # builtin
-    enableCompletion = true;
-    histSize = 91101;
-    histFile = "$HOME/.zhistory";
-    # plugins
-    autosuggestions = {
-      enable = true;
-    };
-    syntaxHighlighting = {
-      enable = true;
-    };
-    # TODO: ? zoxide ? foot ? nix-index ?
-  };
+  programs.zsh.enable = true;
+  # programs.zsh = {  # https://search.nixos.org/options?channel=25.11&query=zsh
+  #   enable = true;
+  #   # Init
+  #   shellInit = ''
+  #     export ZDOTDIR=$HOME/.config/zsh
+  #     export ZCACHE=$HOME/.cache/zsh
+  #     export ZPLUGS=$ZCACHE/plugins   # used in auto-plug.zsh
+  #     source $HOME/.config/shells/envvar.sh
+  #   '';
+  #   promptInit = ''
+  #   ''; # TODO p10k
+  #   # builtin
+  #   enableCompletion = true;
+  #   histSize = 91101;
+  #   histFile = "$HOME/.zhistory";
+  #   # plugins
+  #   autosuggestions = {
+  #     enable = true;
+  #   };
+  #   syntaxHighlighting = {
+  #     enable = true;
+  #   };
+  #   # TODO: ? zoxide ? foot ? nix-index ?
+  # };
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -114,20 +102,32 @@
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
-  environment.systemPackages = with pkgs; [
-    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    fish
-    foot
-    git
-    waybar
-    firefox
-    slurp
-    grim
-    wl-clipboard
-    kitty
-    zsh
-  ];
+  environment = { 
+    systemPackages = with pkgs; [
+      # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      wget
+      fish
+      foot
+      git
+      waybar
+      firefox
+      slurp
+      grim
+      wl-clipboard
+      kitty
+    ];
+    sessionVariables = rec {
+      XDG_CACHE_HOME = "$HOME/.cache";
+      XDG_CONFIG_HOME = "$HOME/.config";
+      XDG_DATA_HOME = "$HOME/.local/share";
+      XDG_STATE_HOME = "$HOME/.local/state";
+
+      XDG_BIN_HOME = "$HOME/.local/bin"; # not official
+      PATH = [
+        "${XDG_BIN_HOME}"
+      ];
+    };
+  };
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
