@@ -9,6 +9,8 @@ let
     nvim = "nvim";
     hypr = "hypr";
     foot = "foot";
+    # bash = "bash";
+    zsh = "zsh";
   }; in
 
 { 
@@ -21,7 +23,7 @@ let
     homeDirectory = "/home/nixnomo";
     stateVersion = "25.11";
     file = { # only need this for configs NOT inside ~/.config/
-      # ".path/nonstandard/foobar".source = ./config/foobar;
+      # ".path/nonstandard/foobar".source = ./config/foobar; # directories
     };
     packages = with pkgs; [
       neovim
@@ -59,11 +61,12 @@ let
       shellAliases = {
         btw = "echo 'Smoke dat red-ice, btw'";
       };
-      profileExtra = ''
-        if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
-          exec uwsm start -S hyprland-uwsm.desktop
-        fi
-      '';
+      # enable with UWSM
+      # profileExtra = ''
+      #   if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+      #     exec uwsm start -S hyprland-uwsm.desktop
+      #   fi
+      # '';
     };
   };
 

@@ -34,7 +34,11 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  services.getty.autologinUser = "nixnomo";
+  # services.getty.autologinUser = "nixnomo";
+  services.displayManager.ly = {
+    enable = true;
+    # settings = {};
+  };
 
   # Enable the X11 windowing system.
   # services.xserver = {
@@ -52,8 +56,15 @@
   # wayland
   programs.hyprland = {
     enable = true;
-    withUWSM = true;
+    # withUWSM = true;
     xwayland.enable = true;
+  };
+
+  programs.zsh = {
+    enable = true;
+    shellInit = ''
+      export ZDOTDIR=~/.config/zsh
+    '';
   };
 
   # Enable CUPS to print documents.
