@@ -41,6 +41,19 @@
     # settings = {};
   };
 
+  # Enable the X11 windowing system.
+  # services.xserver = {
+  #   enable = true;
+  #   # Configure keymap in X11
+  #   xkb.layout = "us";
+  #   xkb.variant = "altgr-intl";
+  #   xkb.options = "eurosign:e,caps:escape";
+  #
+  #   autoRepeatDelay = 200;
+  #   autoRepeatInterval = 35;
+  #   windowManager.qtile.enable = true;
+  # };
+
   # wayland
   programs.hyprland = {
     enable = true;
@@ -49,30 +62,6 @@
   };
 
   programs.zsh.enable = true;
-  # programs.zsh = {  # https://search.nixos.org/options?channel=25.11&query=zsh
-  #   enable = true;
-  #   # Init
-  #   shellInit = ''
-  #     export ZDOTDIR=$HOME/.config/zsh
-  #     export ZCACHE=$HOME/.cache/zsh
-  #     export ZPLUGS=$ZCACHE/plugins   # used in auto-plug.zsh
-  #     source $HOME/.config/shells/envvar.sh
-  #   '';
-  #   promptInit = ''
-  #   ''; # TODO p10k
-  #   # builtin
-  #   enableCompletion = true;
-  #   histSize = 91101;
-  #   histFile = "$HOME/.zhistory";
-  #   # plugins
-  #   autosuggestions = {
-  #     enable = true;
-  #   };
-  #   syntaxHighlighting = {
-  #     enable = true;
-  #   };
-  #   # TODO: ? zoxide ? foot ? nix-index ?
-  # };
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -126,6 +115,24 @@
       PATH = [
         "${XDG_BIN_HOME}"
       ];
+
+      # Put envvar.sh here # TODO: instead do an import
+      # FZF # https://github.com/junegunn/fzf
+      # FZF_DEFAULT_COMMAND=""
+      FZF_DEFAULT_OPTS=''
+        --layout=reverse --border=sharp --margin=3% --color=dark
+        --bind 'ctrl-/:change-preview-window(down|hidden|)'
+      '';
+      # FZF_DEFAULT_OPTS_FILE="" # ~/path/to/file-with-FZF_DEFAULT_OPTS
+      FZF_CTRL_T_OPTS=''
+        --walker-skip .git,node_modules,target
+        --preview 'bat -n --color=always {}'
+      '';
+      FZF_CTRL_R_OPTS="fzf";
+      FZF_ALT_C_OPTS=''
+        --walker-skip .git,node_modules,target
+        --preview 'tree -C {}'
+      '';
     };
   };
 

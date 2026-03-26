@@ -89,7 +89,6 @@ let
       dotDir = "${config.xdg.configHome}/zsh";
       # .zshenv
       envExtra = '' # commands added to `.zshenv`
-        source $HOME/.config/shells/envvar.sh
       ''; # TODO: envvar.sh instead in configuration.nix
       sessionVariables = {
         ZCACHE = "$HOME/.cache/zsh";
@@ -98,7 +97,9 @@ let
       # promptInit = ''
       # ''; # TODO p10k
 
-      # initContent = "";
+      initContent = ''
+        source $ZDOTDIR/zshrc_extra.zsh
+      '';
 
       enableCompletion = true;
 
@@ -121,13 +122,30 @@ let
         #   src = "${zsh_plugs}/zsh-syntax-highlighting"; # can be a git-url
         # }
       ];
+      prezto = {
+        enable = true;
+        prompt.theme = "powerlevel10k";
+        pmodules = [
+          "environment"
+          "terminal"
+          "editor"
+          "history"
+          "directory"
+          "spectrum"
+          "utility"
+          "completion"
+          "autosuggestions" # add ?
+          "syntax-highlighting" # add ?
+          "prompt"
+        ];
+      };
 
-      autosuggestion = {
-        enable = true;
-      };
-      syntaxHighlighting = {
-        enable = true;
-      };
+      # autosuggestion = {
+      #   enable = true;
+      # };
+      # syntaxHighlighting = {
+      #   enable = true;
+      # };
 
       # TODO: ? zoxide ? foot ? nix-index ?
     };
