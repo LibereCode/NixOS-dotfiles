@@ -26,15 +26,21 @@ let
       # ".path/nonstandard/foobar".source = ./config/foobar; # directories
     };
     packages = with pkgs; [
-      neovim
+      # better gnu-core
       ripgrep
       fd
       bat
       sd
+      # editor
+      neovim
+      # lsp
       nil
       nixpkgs-fmt
+      # compilers
       nodejs
       gcc
+      # QOL
+      tealdeer
     ];
   };
 
