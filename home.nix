@@ -31,6 +31,7 @@ let
       fd
       bat
       sd
+      fzf
       # editor
       neovim
       # lsp

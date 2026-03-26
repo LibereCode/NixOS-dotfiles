@@ -60,11 +60,27 @@
     xwayland.enable = true;
   };
 
-  programs.zsh = {
+  programs.zsh = {  # https://search.nixos.org/options?channel=25.11&query=zsh
     enable = true;
+    # Init
     shellInit = ''
       export ZDOTDIR=~/.config/zsh
     '';
+    promptInit = ''
+      prompt off
+    ''; # TODO p10k
+    # builtin
+    enableCompletion = true;
+    histSize = 91101;
+    histFile = "$HOME/.zhistory";
+    # plugins
+    autosuggestions = {
+      enable = true;
+    };
+    syntaxHighlighting = {
+      enable = true;
+    };
+    # TODO: ? zoxide ? foot ? nix-index ?
   };
 
   # Enable CUPS to print documents.
@@ -106,6 +122,7 @@
     grim
     wl-clipboard
     kitty
+    zsh
   ];
 
   fonts.packages = with pkgs; [
