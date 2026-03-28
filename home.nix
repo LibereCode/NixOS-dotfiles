@@ -65,6 +65,16 @@ let
         };
       };
     };
+
+    fzf = { # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.fzf.enable
+      enable = true;
+      enableZshIntegration = true;
+
+    };
+    # nvim - TODO: add required packages
+    neovim.plugins = [
+      pkgs.vimPlugins.nvim-treesitter
+    ];
     bash = {
       enable = true;
       shellAliases = {
@@ -78,11 +88,6 @@ let
       # '';
     };
 
-    fzf = { # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.fzf.enable
-      enable = true;
-      enableZshIntegration = true;
-
-    };
     zsh = { # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
     # https://search.nixos.org/options?channel=25.11&query=zsh
       enable = true;

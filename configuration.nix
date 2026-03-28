@@ -101,17 +101,21 @@
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment = { 
     systemPackages = with pkgs; [
+      librewolf # firefox
       # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       wget
       fish
       foot
       git
       waybar
-      firefox
       slurp
       grim
       wl-clipboard
       kitty
+
+      # why are these not default?
+      busybox
+      python315
     ];
     sessionVariables = rec {
       XDG_CACHE_HOME = "$HOME/.cache";
@@ -136,7 +140,7 @@
         --walker-skip .git,node_modules,target
         --preview 'bat -n --color=always {}'
       '';
-      FZF_CTRL_R_OPTS="fzf";
+      FZF_CTRL_R_OPTS="";
       FZF_ALT_C_OPTS=''
         --walker-skip .git,node_modules,target
         --preview 'tree -C {}'
@@ -152,8 +156,8 @@
   # (/run/current-system/configuration.nix). This is useful in case you accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  # nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.experimental-features = [ "nix-command" ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # nix.settings.experimental-features = [ "nix-command" ];
 
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.11"; # Did you read the comment? # maybe?
