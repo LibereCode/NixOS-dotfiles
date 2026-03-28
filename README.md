@@ -19,3 +19,7 @@ couple of mistakes:
 
 Lesson learned? Use `git merge` istead of `git rebase` 
     (when wanting to pull-to-push a new remote)
+
+### THIS BRANCH
+
+This is the first working NixOS config on my oldshitlaptop
