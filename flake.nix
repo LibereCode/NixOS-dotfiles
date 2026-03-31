@@ -1,54 +1,35 @@
 {
-  description = "NixOS configuration";
+  description = "NixOS + standalone home-manager config flakes to get you started!";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    mango = {
-      url = "github:mangowm/mango";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
   };
 
-  outputs = inputs@{ self, flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      debug = true;
-      systems = [ "x86_64-linux" ];
-      flake = {
-        nixosConfigurations = {
-          redice = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = [
-	      ./configuration.nix
-
-              inputs.home-manager.nixosModules.home-manager
-
-              # Add mango nixos module
-              inputs.mango.nixosModules.mango
-              {
-                programs.mango.enable = true;
-              }
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  backupFileExtension = "backup";
-                  users."kashnomo".imports = [
-		    ./home.nix
-                    ]
-                    ++ [
-                      # Add mango hm module
-                      inputs.mango.hmModules.mango
-                    ];
-                };
-              }
-            ];
-          };
-        };
+  outputs = {nixpkgs, ...}: let
+    forAllSystems = nixpkgs.lib.genAttrs [
+      "aarch64-linux"
+      "i686-linux"
+      "x86_64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+    ];
+  in {
+    templates = {
+      minimal = {
+        description = ''
+          Minimal flake - contains only the configs.
+          Contains the bare minimum to migrate your existing legacy configs to flakes.
+        '';
+        path = ./minimal;
+      };
+      standard = {
+        description = ''
+          Standard flake - augmented with boilerplate for custom packages, overlays, and reusable modules.
+          Perfect migration path for when you want to dive a little deeper.
+        '';
+        path = ./standard;
       };
     };
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+  };
 }

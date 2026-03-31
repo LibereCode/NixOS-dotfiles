@@ -1,8 +1,0 @@
-# NOTE: MUST use ~/absolute/path/to/thingy.conf
-# ~/nixos/dot.files/mango/
-
-source-optional=./bind.conf
-
-source-optional=./theme.conf
-
-source-optional=./monitor-input.conf
