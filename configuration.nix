@@ -1,165 +1,134 @@
 # Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
-	./hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Bootloader.
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
   networking = {
-    hostName = "red-ice"; # Define your hostname.
+    hostName = "redice"; # NOTE: Red Ice (but made ambigous, hihi)
+    networkmanager.enable = true;
+    # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-    # Configure network connections interactively with nmcli or nmtui.
-    networkmanager.enable = true; # TODO iwd-backend
-
-    # Configure network proxy if necessary
+    # Config network proxy if necessary
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-    # Open ports in the firewall.
-    # firewall.allowedTCPPorts = [ ... ];
-    # firewall.allowedUDPPorts = [ ... ];
-    # Or disable the firewall altogether.
-    # firewall.enable = false;
   };
 
-  # Set your time zone.
   time.timeZone = "Europe/Stockholm";
 
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_DK.UTF-8";
-  console = {
-    # font = "Lat2-Terminus16";
-    # keyMap = "us";
-    useXkbConfig = true; # use xkb.options in tty.
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_DK.UTF-8";
+      LC_IDENTIFICATION = "en_DK.UTF-8";
+      LC_MEASUREMENT = "en_DK.UTF-8";
+      LC_MONETARY = "en_DK.UTF-8";
+      LC_NAME = "en_DK.UTF-8";
+      LC_NUMERIC = "en_DK.UTF-8";
+      LC_PAPER = "en_DK.UTF-8";
+      LC_TELEPHONE = "en_DK.UTF-8";
+      LC_TIME = "en_DK.UTF-8";
+    };
   };
 
-  # services.getty.autologinUser = "nixnomo";
-  services = {
-    displayManager.ly = {
-      enable = true;
-      # settings = {};
-    };
+  programs.hyprland.enable = true;
 
-    # Enable CUPS to print documents.
-    # printing.enable = true;
+  services = { 
+    displayManager.ly.enable = true; # TUI/TTY login manager
 
-    # Enable sound.
-    # pulseaudio.enable = true;
-    # OR
+    printing.enable = true; # CUPS (printing) support
+
+    libinput.enable = true; # THIS (without xserver)
+
+    blueman.enable = true; # bluetooth gui
+
+    tlp.enable = true; # power management
+    upower.enable = true; # battery
+
+    pulseaudio.enable = false;
     pipewire = {
       enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
       pulse.enable = true;
     };
-
-    # Enable touchpad support (enabled default in most desktopManager).
-    libinput.enable = true;
-
-    # List services that you want to enable:
-
-    # Enable the OpenSSH daemon.
-    openssh.enable = true;
   };
+  security = {
+    rtkit.enable = true;
 
-  programs = {
-    # wayland
-    hyprland = {
-      enable = true;
-      # withUWSM = true;
-      xwayland.enable = true;
-    };
-
-    zsh.enable = true;
-
-    # Some programs need SUID wrappers, can be configured further or are started in user sessions.
-    mtr.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-  };
-
-  users.users.nixnomo = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      tree
-    ];
-    shell = pkgs.zsh;
-  };
-
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
-  environment = { 
-    systemPackages = with pkgs; [
-      librewolf # firefox
-      # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-      wget
-      fish
-      foot
-      git
-      waybar
-      slurp
-      grim
-      wl-clipboard
-      kitty
-
-      # why are these not default?
-      busybox
-      python315
-    ];
-    sessionVariables = rec {
-      XDG_CACHE_HOME = "$HOME/.cache";
-      XDG_CONFIG_HOME = "$HOME/.config";
-      XDG_DATA_HOME = "$HOME/.local/share";
-      XDG_STATE_HOME = "$HOME/.local/state";
-
-      XDG_BIN_HOME = "$HOME/.local/bin"; # not official
-      PATH = [
-        "${XDG_BIN_HOME}"
-      ];
-
-      # Put envvar.sh here # TODO: instead do an import
-      # FZF # https://github.com/junegunn/fzf
-      # FZF_DEFAULT_COMMAND=""
-      FZF_DEFAULT_OPTS=''
-        --layout=reverse --border=sharp --margin=3% --color=dark
-        --bind 'ctrl-/:change-preview-window(down|hidden|)'
-      '';
-      # FZF_DEFAULT_OPTS_FILE="" # ~/path/to/file-with-FZF_DEFAULT_OPTS
-      FZF_CTRL_T_OPTS=''
-        --walker-skip .git,node_modules,target
-        --preview 'bat -n --color=always {}'
-      '';
-      FZF_CTRL_R_OPTS="";
-      FZF_ALT_C_OPTS=''
-        --walker-skip .git,node_modules,target
-        --preview 'tree -C {}'
-      '';
-    };
+    sudo.extraConfig = ''
+Defaults passprompt="[sudo] password for %p: "
+Defaults insults
+Defaults pwfeedback
+    '';
   };
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
   ];
 
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
+  users.users.kashnomo = {
+    isNormalUser = true;
+    description = "Kaŝnomo";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+      # thunderbird
+      tree
+      pcmanfm
+      pinentry-curses
+    ];
+  };
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings.General.Experimental = true;
+  };
+
+  nixpkgs.config.allowUnfree = true; # Allow unfree packages
+
+  # List packages installed in system profile. To search, run: `$ nix search wget`
+  environment = {
+    systemPackages = with pkgs; [
+      # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      neovim # so root can also use
+      wget
+      libnotify
+    ];
+
+    pathsToLink = [
+      "/share/applications"
+      "/share/xdg-desktop-portal"
+    ];
+  };
+
+  programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
+  };
+  services.openssh.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  # nix.settings.experimental-features = [ "nix-command" ];
 
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "25.11"; # Did you read the comment? # maybe?
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "25.11"; # Did you read the comment? # No?
 }
-

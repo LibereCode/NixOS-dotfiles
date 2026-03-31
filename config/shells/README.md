@@ -1,3 +1,0 @@
-# SHELLS
-
-Contain shared file between shells, sourced by zsh, bash, fish, ...

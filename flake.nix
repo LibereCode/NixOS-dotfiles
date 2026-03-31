@@ -1,33 +1,54 @@
 {
-  description = "Red-Ice is life";
+  description = "NixOS configuration";
 
   inputs = {
-    # This is pointing to an unstable release. If you prefer a stable release instead, you can this to the latest number shown here: https://nixos.org/download
-    # Use `nix flake update` to update the flake to the latest revision of the chosen release channel.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-      };
-
-  };
-
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations.red-ice = nixpkgs.lib.nixosSystem {
-      modules = [ 
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-	          useGlobalPkgs = true;
-	          useUserPackages = true;
-	          users.nixnomo = import ./home.nix;
-	          backupFileExtension = "backup";
-	        };
-        }
-      ];
+    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-}
 
+  outputs = inputs@{ self, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      debug = true;
+      systems = [ "x86_64-linux" ];
+      flake = {
+        nixosConfigurations = {
+          redice = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+	      ./configuration.nix
+
+              inputs.home-manager.nixosModules.home-manager
+
+              # Add mango nixos module
+              inputs.mango.nixosModules.mango
+              {
+                programs.mango.enable = true;
+              }
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  backupFileExtension = "backup";
+                  users."kashnomo".imports = [
+		    ./home.nix
+                    ]
+                    ++ [
+                      # Add mango hm module
+                      inputs.mango.hmModules.mango
+                    ];
+                };
+              }
+            ];
+          };
+        };
+      };
+    };
+}

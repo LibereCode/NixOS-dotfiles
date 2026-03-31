@@ -1,0 +1,140 @@
+{ config, pkgs, ... }:
+
+{
+  home = {
+    username = "kashnomo";
+    homeDirectory = "/home/kashnomo";
+    stateVersion = "25.11";
+  };
+
+  # wayland
+  wayland = {
+    windowManager.hyprland = {
+      enable = true; # maybe unnecessary?
+      extraConfig = ''# extraConfig = appended (to end)
+source = ./test.conf
+      '';
+
+      settings = {
+	# variables
+	"$mod" = "SUPER";
+	"$term" = "kitty -1";
+	"$web" = "librewolf";
+
+	bindm = [
+	  "$mod, mouse:272, movewindow"
+	  "$mod, mouse:273, resizewindow"
+	  "$mod ALT, mouse:272, resizewindow"
+	];
+
+	bind = [
+          "$mod, q, killactive"
+          "$mod, t, togglefloating"
+	  #
+	  "$mod, Return, exec, $term"
+	  "$mod, b, exec, $web"
+	  #
+          "$mod, h, movefocus, l"
+          "$mod, j, movefocus, d"
+          "$mod, k, movefocus, u"
+          "$mod, l, movefocus, r"
+	];
+
+	input = {
+	  # xkb
+	  kb_layout = "us";
+	  kb_variant = "altgr-intl";
+	  kb_model = "";
+	  kb_options = "caps:escape";
+	  kb_rules = "";
+	};
+
+	exec-once = [
+	  "kitty -1 --start-as hidden --hold"
+  	  "ashell" # TODO enable/install bluetooth, upower
+	];
+
+	decoration = {
+	  # shadow_offset = "0.5";
+	  # "col.shadow" = "rgba(00000099)";
+	};
+      };
+
+    };
+  };
+
+  programs = {
+    home-manager.enable = true; # lets home-manager install/manage itself
+
+    # for hyprland
+    ashell.enable = true;
+    kitty = {
+      enable = true;
+    };
+
+    # better core-utils
+    lsd.enable = true; # ls
+    zoxide.enable = true; # cd
+    bat.enable = true; # cat 
+    ripgrep.enable = true; # grep
+    fd.enable = true; # find 
+    # TODO
+    # sd
+    # trash-cli
+
+    # other usefull utils
+    tealdeer.enable = true; # tldr
+    fzf = {
+      enable = true;
+      # settings
+      # ...
+    };
+    git.enable = true;
+
+    # shell
+    bash = {
+      enable = true;
+      shellAliases = {
+        btw = "echo I sniff that Red-ICE(NixOS), btw";
+        rebuild = "sudo nixos-rebuild switch --flake ~/nixos#redice";
+      };
+    };
+    zsh = {
+      enable = true;
+      dotDir = "${config.xdg.configHome}/zsh";
+    };
+    fish = {
+      enable = true;
+    };
+
+    # editor
+    neovim = {
+      enable = true;
+    };
+
+    # web/mail browsers
+    # thunderbird.enable = true;
+    # firefox.enable = true;
+    librewolf = {
+      enable = true;
+      profiles = {
+        redIcedWolf = {
+	  id = 0;
+	  bookmarks = {};
+	  containers = {};
+	  extensions = {};
+	  search = {};
+	  settings = {};
+	};
+      };
+    };
+  };
+
+  services = {
+    gpg-agent = {
+      enable = true;
+      defaultCacheTtl = 1800;
+      enableSshSupport = true;
+    };
+  };
+}
