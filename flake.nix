@@ -10,13 +10,13 @@
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-        nixvim = {
-            url = "github:nix-community/nixvim"; # unstable
-
-            inputs.nixpkgs.follows = "nixpkgs"; # not recommended ?
+        nvf = {
+            url = "github:notashelf/nvf";
+            inputs.nixpkgs.follows = "nixpkgs";
         };
     };
-    outputs = inputs@{ self, nixpkgs, home-manager, nixvim, ... }: {
+
+    outputs = inputs@{ self, nixpkgs, home-manager, nvf, ... }: {
         # NOTE: change the hostname (here: 'virtualice')
         nixosConfigurations.virtualice = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux"; # x86_64-linux not need to specify
@@ -31,7 +31,8 @@
                         backupFileExtension = "old";
                     };
                 }
-                nixvim.nixosModules.nixvim
+                nvf.nixosModules.default
+                ./modules/nvf/init.nix # NOTE: NixOS FUCKING USES `git add .` TO DETERMINE FILES!! FML THIS TOOK SO LONG D:
             ];
         };
     };
@@ -42,4 +43,7 @@
 #   3.  outputs....modules = [ <choose below> ]
 #       <bar>.nixosModules.<something>  # nixos module
 #       <bar>.homeModules.<something>  # home-manager module
-
+# NOTE: Not sure, but
+#       I think I cant run homeModules because my config seems to be a flake focused on configuration.nix,
+#       having a home-manager wrapped in it (and not a independent home-manager)?
+#       Becuase using the nixosModules (configuration.nix) worked, while homeModules didnt...

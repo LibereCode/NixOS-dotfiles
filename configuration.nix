@@ -5,10 +5,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix # NOTE: sooooo impure
-    ];
+    imports =
+      [ # Include the results of the hardware scan.
+        /etc/nixos/hardware-configuration.nix # NOTE: sooooo impure
+      ];
 
     # Use the systemd-boot EFI boot loader.
     boot.loader.systemd-boot.enable = true;
@@ -119,6 +119,18 @@
       enable = true;
       enableSSHSupport = true;
     }; # TODO: pinentry-curses
+
+    # programs.nvf = {
+    #     enable = true;
+    #     settings.vim = {
+    #         viAlias = true;
+    #         vimAlias = true;
+    #         lsp = {
+    #             enable = true;
+    #         };
+    #     };
+    # };
+
 
     # Copy the NixOS configuration file and link it from the resulting system
     # (/run/current-system/configuration.nix). This is useful in case you
