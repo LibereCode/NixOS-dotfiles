@@ -49,6 +49,7 @@
                 v = "nvim";
             };
         };
+        # nixvim.imports = [ ./modules/nixvim/init.nix ]; # so I don't need to prefix `programs.nixvim`
 
         # Gui
         librewolf = {

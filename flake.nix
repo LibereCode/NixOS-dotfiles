@@ -10,8 +10,13 @@
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
+        nixvim = {
+            url = "github:nix-community/nixvim"; # unstable
+
+            inputs.nixpkgs.follows = "nixpkgs"; # not recommended ?
+        };
     };
-    outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
+    outputs = inputs@{ self, nixpkgs, home-manager, nixvim, ... }: {
         # NOTE: change the hostname (here: 'virtualice')
         nixosConfigurations.virtualice = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux"; # x86_64-linux not need to specify
@@ -26,8 +31,15 @@
                         backupFileExtension = "old";
                     };
                 }
+                nixvim.nixosModules.nixvim
             ];
         };
     };
 }
+# NOTE: to add a module:
+#   1.  input.<bar>.url = "github:<foo>/<bar>";
+#   2.  outputs = inputs@{ stuff, shit, <bar>, ... }:
+#   3.  outputs....modules = [ <choose below> ]
+#       <bar>.nixosModules.<something>  # nixos module
+#       <bar>.homeModules.<something>  # home-manager module
 
