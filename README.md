@@ -1,5 +1,11 @@
-# NixOS-dotfiles
+# Nixos config 4.0
 
-Nixos config 3.0
+Now on a virtual machine (on my main laptop).
 
-Using template 'nix-starter-config' (see other README.md)
+Minimal templates (basically just default `nixos-generate-config`).
+I use hyprland as WC, because it has good home-manager integration
+(have fully used home-manager as hyprland config, btw).
+
+## Packages
+
+TODO: write core-packages (like wallpaper, menu, ... ) used
