@@ -10,13 +10,17 @@
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-        nvf = {
-            url = "github:notashelf/nvf";
-            inputs.nixpkgs.follows = "nixpkgs";
+        # nvf = {
+        #     url = "github:notashelf/nvf";
+        #     inputs.nixpkgs.follows = "nixpkgs";
+        # };
+        nixvim = {
+            url = "github:nix-community/nixvim"; # unstable
+            # inputs.nixpkgs.follows = "nixpkgs"; # not recommended?
         };
     };
 
-    outputs = inputs@{ self, nixpkgs, home-manager, nvf, ... }: {
+    outputs = inputs@{ self, nixpkgs, home-manager, nixvim, ... }: { # nvf
         # NOTE: change the hostname (here: 'virtualice')
         nixosConfigurations.virtualice = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux"; # x86_64-linux not need to specify
@@ -31,8 +35,9 @@
                         backupFileExtension = "old";
                     };
                 }
-                nvf.nixosModules.default
-                ./modules/nvf/init.nix # NOTE: NixOS FUCKING USES `git add .` TO DETERMINE FILES!! FML THIS TOOK SO LONG D:
+                # nvf.nixosModules.default
+                # ./modules/nvf/init.nix # NOTE: NixOS FUCKING USES `git add .` TO DETERMINE FILES!! FML THIS TOOK SO LONG D:
+                nixvim.nixosModules.nixvim
             ];
         };
     };

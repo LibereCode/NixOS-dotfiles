@@ -107,6 +107,11 @@
         ];
     };
 
+    programs.nixvim = {
+        enable = true;
+        imports = [ ./modules/nixvim/init.nix ];
+    };
+
     fonts.packages = with pkgs; [
         nerd-fonts.victor-mono
     ];
