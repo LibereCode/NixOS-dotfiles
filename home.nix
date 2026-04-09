@@ -1,4 +1,4 @@
-{ configs, pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
     imports = [
@@ -22,6 +22,30 @@
             })
         ];
     };
+
+    xdg = {
+        enable = true;
+
+        configHome = "${config.home.homeDirectory}/config"; # This bricked my config?
+        # cacheHome = "~/cache";    # Can chage this and below,
+        # dataHome = "~/data";      # but default is good 
+        # stateHome = "~/state";
+
+        userDirs = {
+            enable = true;
+            createDirectories = true;
+            documents = "${config.home.homeDirectory}/Docs";
+            # Has defaults directories (already enabled
+            templates = "${config.xdg.userDirs.documents}/Templates";
+            extraConfig = { # allows adding non-standard dirs
+                media = "${config.home.homeDirectory}/Docs";
+            };
+            pictures = "${config.xdg.userDirs.extraConfig.media}/Pics";
+            videos = "${config.xdg.userDirs.extraConfig.media}/Vids";
+            music = "${config.xdg.userDirs.extraConfig.media}/Music";
+        };
+    };
+
     services = {
         ssh-agent = {
             enable = true;
@@ -47,6 +71,7 @@
             shellAliases = {
                 rebuild = "sudo nixos-rebuild switch --impure --flake ~/nixos#virtualice";
                 v = "nvim";
+                echo_home = "echo ${config.home.homeDirectory}";
             };
         };
 
