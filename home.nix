@@ -75,6 +75,11 @@ in
             enable = true;
         };
     };
+
+	# editorconfig = {
+	# TODO:
+	# };
+
     programs = {
 
         # Terminal
@@ -201,9 +206,12 @@ in
 
                 # *.type = "lua"  # TODO: find out how to do this
 
-                telescope-nvim
+				# core
                 nvim-treesitter
+				(nvim-treesitter.withPlugins (p: [ p.c p.nix p.lua p.python p.ini p.toml p.json p.rust p.html p.bash p.fish p.zsh p.markdown p.toml p.todotxt p.tmux p.vim ] ))
                 nvim-lspconfig
+
+                telescope-nvim
             ];
             viAlias = true;
             vimAlias = true;
