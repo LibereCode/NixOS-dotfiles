@@ -130,6 +130,9 @@
                 kb_rules = "";
                 # TODO: add compose
 
+                repeat_delay = 234; # time until
+                repeat_rate = 39;   # time between
+
                 follow_mouse = 1;
 
                 sensitivity = 0; # -1.0 -> 1.0

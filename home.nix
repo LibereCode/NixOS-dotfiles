@@ -1,5 +1,14 @@
 { pkgs, config, ... }:
 
+let
+    nixhome = "${config.home.homeDirectory}/nixos"; # TODO: change to your fav path
+    dotfiles = "${nixhome}/lnsconfig";
+    create_lns = path: config.lib.file.mkOutOfStoreSymlink path;
+    lns = { # I think you can create a sub/dir if changing the "key" into "sub/dir"
+        nvim = "nvim";
+    };
+in
+
 {
     imports = [
         ./modules/hypr/init.nix
@@ -44,6 +53,18 @@
             videos = "${config.xdg.userDirs.extraConfig.media}/Vids";
             music = "${config.xdg.userDirs.extraConfig.media}/Music";
         };
+
+        # configFile = {
+        #     "nvim" = {
+        #         source = create_lns "${dotfiles}/nvim";
+        #         recursive = true;
+        #     };
+        # };
+        configFile = builtins.mapAttrs 
+        (name: subpath: {
+            source = create_lns "${dotfiles}/${subpath}";
+            recursive = true;
+            }) lns;
     };
 
     services = {
@@ -66,6 +87,8 @@
         ssh = {
             enable = true;
         };
+        # TODO: ssh-agent, bash-agent ?
+
         bash = {
             enable = true;
             shellAliases = {
@@ -73,9 +96,123 @@
                 v = "nvim";
                 echo_home = "echo ${config.home.homeDirectory}";
             };
+            initExtra = ''
+                if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]; then
+                    shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+                    exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+                fi
+            '';
         };
 
-        # Gui
+        fish = {
+            enable = true;
+            plugins = [
+            # from nixpkgs (easy way)
+                { name = "done"; src = pkgs.fishPlugins.done.src; }
+                { name = "fzf-fish"; src = pkgs.fishPlugins.fzf-fish.src; }
+                { name = "forgit"; src = pkgs.fishPlugins.forgit.src; }
+                { name = "hydro"; src = pkgs.fishPlugins.hydro.src; }
+            ];
+            binds = { # from HM examples
+                "alt-shift-b".command = "fish_commandline_append bat";
+                "alt-s".erase = true;
+                "alt-s".operate = "preset";
+            };
+            shellInitLast = ''
+                zoxide init fish | source
+            '';
+            shellAliases = {
+                rebuild = "sudo nixos-rebuild switch --impure --flake ~/nixos#virtualice";
+                echo_home = "echo ${config.home.homeDirectory}";
+                v = "nvim";
+                l = "lsd -L";
+            };
+        };
+
+        kitty = {
+            enable = true;
+            enableGitIntegration = true;
+            # environment = {
+            #     Can set EnvVar ?
+            # };
+            font = {
+                package = pkgs.nerd-fonts.victor-mono;
+                name = "VictorMono Nerd Font";
+                size = 14;
+            };
+            keybindings = {
+                "ctrl+c" = "copy_or_interrupt";
+            };
+            settings = {
+                scrollback_lines = 9723;
+                enable_audio_bell = false;
+                update_check_interval = 0;
+            };
+            themeFile = "HachikoRed";
+            # extraConfig = ''
+            # '';
+        };
+        
+        # neovim = {
+        #     # TODO:
+        # };
+
+        # More CLI tools
+        # enable<Shell>Integration = home.shell.enableShellIntegration = true; (so unnecessary)
+        zoxide = {
+            enable = true;
+        };
+        yazi = {
+            enable = true;
+            # TODO: theme, controls
+        };
+        lsd = {
+            enable = true;
+            # TODO: Icons, colors, config
+        };
+        fzf = {
+            enable = true;
+            changeDirWidgetCommand = "fd --type d";
+            changeDirWidgetOptions = [
+                "--preview 'tree -C {} | head -200'"
+            ];
+            colors = {
+                bg = "#1e1e1e";
+                "bg+" = "#1e1e1e";
+                fg = "#d4d4d4";
+                "fg+" = "#d4d4d4";
+            };
+            fileWidgetCommand = "fd --type f";
+            fileWidgetOptions = [
+                "--preview 'bat {}'"
+            ];
+            # historyWidgetOptions = [ "--sort" "--exact" ];
+        };
+        fd = {
+            enable = true;
+            hidden = true;
+            ignores = [
+                ".git/"
+            ];
+            extraOptions = [
+                "--absolute-path"
+            ];
+        };
+        bat = {
+            enable = true;
+            config = {
+                pager = "less -iRFMx4 --dumb";
+                theme = "TwoDark";
+                color = "auto";
+                style = "full,-numbers,-grid";
+                italic-text = "always";
+            };
+            extraPackages = with pkgs.bat-extras; [
+            batdiff batman batgrep batwatch ];
+        };
+
+
+        # GUI
         librewolf = {
             enable = true;
             profiles = {

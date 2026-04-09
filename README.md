@@ -15,3 +15,9 @@ nix-script (preferably home-manager).
 ## Packages
 
 TODO: write core-packages (like wallpaper, menu, ... ) used
+
+## DIR STRUCTURE
+
+- `./modules` have files imported into some core file, basically integrated with home-manager/similar
+- `./lnsconfig` are files that will me `ln -s $XDG_CONFIG_HOME/` (~/config) and do not follow nix config.
+
