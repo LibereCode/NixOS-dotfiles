@@ -5,7 +5,7 @@ let
     dotfiles = "${nixhome}/lnsconfig";
     create_lns = path: config.lib.file.mkOutOfStoreSymlink path;
     lns = { # I think you can create a sub/dir if changing the "key" into "sub/dir"
-        nvim = "nvim";
+        # nvim = "nvim";
     };
 in
 
@@ -29,6 +29,9 @@ in
                 ];
                 text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
             })
+
+            nodejs
+            gcc
         ];
     };
 
@@ -147,15 +150,65 @@ in
                 scrollback_lines = 9723;
                 enable_audio_bell = false;
                 update_check_interval = 0;
+                confirm_os_window_close = 0;
             };
             themeFile = "HachikoRed";
             # extraConfig = ''
             # '';
         };
         
-        # neovim = {
-        #     # TODO:
-        # };
+        neovim = {
+            enable = true;
+            defaultEditor = true; # VISUAL=EDITOR=nvim
+            extraLuaPackages = luaPkgs: with luaPkgs; [luautf8 ];
+            extraPackages = with pkgs; [ # specify deps, ex: LSP
+                # lang servers
+                lua-language-server # lua
+                nil                 # nix lsp
+                nixpkgs-fmt         # nix format
+            ];
+            # extraConfig = ''
+	    # ???
+            # '';
+            initLua = ''
+	    vim.cmd(':filetype plugin indent on')
+
+	    local o = vim.opt
+
+	    o.shiftwidth = 4
+	    o.softtabstop = 4
+	    o.tabstop = 4
+	    o.number = true
+	    o.relativenumber = true
+	    o.smartindent = true
+	    o.showmatch = true
+	    o.backspace = 'indent,eol,start'
+
+	    o.syntax = "on";
+
+	    vim.cmd.colorscheme 'habamax'
+
+	    local map = vim.keymap.set
+	    map('n', '<SPACE>e', ':Ex<CR>')
+	    map('n', '<C-s>', ':w<CR>')
+	    map('i', '#', 'X#')
+            '';
+            plugins = with pkgs.vimPlugins; [
+                # { plugin = foobar;
+                #   config = "print('lua, btw')";
+                #   type = "lua";
+                # }
+
+                # *.type = "lua"  # TODO: find out how to do this
+
+                telescope-nvim
+                nvim-treesitter
+                nvim-lspconfig
+            ];
+            viAlias = true;
+            vimAlias = true;
+            vimdiffAlias = true;
+        };
 
         # More CLI tools
         # enable<Shell>Integration = home.shell.enableShellIntegration = true; (so unnecessary)
