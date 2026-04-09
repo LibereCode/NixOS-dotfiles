@@ -31,11 +31,11 @@
     services.displayManager.ly.enable = true;
     # services.getty.autologinUser = "nixnomo";
     
-    # programs.hyprland = {
-    #     enable = true;
-    #     # withUWSW = true;
-    #     xwayland.enable = true;
-    # };
+    programs.hyprland = { # think I need it here to show on login-manager
+        enable = true;
+        # withUWSW = true;
+        xwayland.enable = true;
+    };
 
     # console = {
     #   font = "Lat2-Terminus16";
@@ -107,11 +107,6 @@
         ];
     };
 
-    programs.nixvim = {
-        enable = true;
-        imports = [ ./modules/nixvim/init.nix ];
-    };
-
     fonts.packages = with pkgs; [
         nerd-fonts.victor-mono
     ];
@@ -124,17 +119,6 @@
       enable = true;
       enableSSHSupport = true;
     }; # TODO: pinentry-curses
-
-    # programs.nvf = {
-    #     enable = true;
-    #     settings.vim = {
-    #         viAlias = true;
-    #         vimAlias = true;
-    #         lsp = {
-    #             enable = true;
-    #         };
-    #     };
-    # };
 
 
     # Copy the NixOS configuration file and link it from the resulting system

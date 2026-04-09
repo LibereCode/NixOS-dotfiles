@@ -150,7 +150,7 @@
 
             # KeyBinds
 
-            "$mod" = "ALT"; # not "SUPER" cause virtual machine
+            "$mod" = "SUPER"; # "ALT"; "SUPER"; (SUPER+mouse work weird in virtual machine, use ALT for that instead)
 
             bind = [
                 "$mod, Return, exec, $term"
@@ -185,9 +185,9 @@
                 ]) 9)
             );
 
-            bindm = [
-                "$mod, mouse:272, movewindow"
-                "$mod, mouse:273, resizewindow"
+            bindm = [ # WARN: Can't be Super in a virt-machine
+                "ALT, mouse:272, movewindow"
+                "ALT, mouse:273, resizewindow"
             ];
 
             bindel = [ # TODO: wpctl
