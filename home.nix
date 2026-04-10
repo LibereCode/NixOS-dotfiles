@@ -24,7 +24,7 @@ in
             waybar
             kitty
             (pkgs.writeShellApplication {
-                name = "ns-tv";
+                name = "nixtv";
                 runtimeInputs = with pkgs; [
                     fzf
                     nix-search-tv
