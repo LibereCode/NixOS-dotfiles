@@ -20,5 +20,25 @@ TODO: write core-packages (like wallpaper, menu, ... ) used
 
 - `./modules` have files imported into some core file, basically integrated with home-manager/similar
 - `./lnsconfig` are files that will me `ln -s $XDG_CONFIG_HOME/` (~/config) and do not follow nix config.
+- `./assets` have currently:
+    - `./assets/scripts` which contain some shell scripts usefull for general config
 
+## TODO:
 
+### packages
+
+- todo.sh
+- waybar
+
+### config
+
+- waybar 
+- hyprland (colors, and trim animations)
+
+#### scipts for config
+
+- effective `rebuild`, that does (not in order):
+    - edit some config with example: `nvim $(fd -t f '' ~/nixos | fzf)`
+    - `nixos-rebuild --impure --flake ~/nixos#<HOSTNAME>` (target `$HOSTNAME` instead of hardcoding.
+    - git add->commit->push.
+    - trim the _disgusting_ error-code, to just show the relavant 'ERROR' msg.
